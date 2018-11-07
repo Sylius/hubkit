@@ -199,7 +199,7 @@ final class HubKitApplicationConfig extends DefaultApplicationConfig
                 ->addOption('security', null, Option::BOOLEAN, 'Merge pull request as a security patch')
                 ->addOption('squash', null, Option::BOOLEAN, 'Squash the pull request before merging')
                 ->addOption('no-pull', null, Option::BOOLEAN, 'Skip pulling changes to your local branch')
-                ->addOption('pat', null, Option::OPTIONAL_VALUE | Option::STRING, 'Thank you message, @author will be replaced with pr author(s)', 'Thank you @author')
+                ->addOption('pat', null, Option::OPTIONAL_VALUE | Option::STRING, 'Thank you message, @author will be replaced with pr author(s)')
                 ->addOption('no-pat', null, Option::NO_VALUE | Option::BOOLEAN, 'Skip thank you message, cannot be used in combination with --pat')
                 ->setHandler(function () {
                     return new Handler\MergeHandler(
@@ -262,7 +262,9 @@ final class HubKitApplicationConfig extends DefaultApplicationConfig
                         $this->container['style'],
                         $this->container['git'],
                         $this->container['github'],
-                        $this->container['process']
+                        $this->container['process'],
+                        $this->container['config'],
+                        $this->container['splitsh_git']
                     );
                 })
             ->end()

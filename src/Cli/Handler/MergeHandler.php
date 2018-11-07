@@ -87,7 +87,9 @@ final class MergeHandler extends GitBaseHandler
         $mergeHash = $this->github->mergePullRequest($id, $title, $message, $pr['head']['sha'])['sha'];
 
         if (!$args->getOption('no-pat')) {
-            $this->patAuthor($pr, $args->getOption('pat'));
+            $user = $this->github->getUser($pr['user']['login']);
+
+            $this->patAuthor($pr, $user, $args->getOption('pat'));
         }
 
         $this->style->text('<fg=yellow>Pushing notes please wait...</>');
@@ -298,13 +300,32 @@ final class MergeHandler extends GitBaseHandler
         return "\n";
     }
 
-    private function patAuthor(array $pr, string $message = null)
+    private function patAuthor(array $pr, array $user, string $message = null)
     {
-        if ($this->github->getAuthUsername() === $pr['user']['login']) {
+        if (in_array($pr['user']['login'], [$this->github->getAuthUsername(), 'SyliusBot'], true)) {
             return;
         }
 
-        $this->github->createComment($pr['number'], str_replace('@author', '@'.$pr['user']['login'], $message));
+        $pats = [
+            'Thank you, @author! :tada:',
+            'Thank you, @author! :1st_place_medal:',
+            'Thanks, @author! :tada:',
+            'Thanks, @author! :1st_place_medal:',
+        ];
+
+        if (trim($user['name'] ?? '') !== '') {
+            $author = substr($user['name'], 0, strpos($user['name'], ' ') ?: strlen($user['name']));
+        } else {
+            $author = $pr['user']['login'];
+        }
+
+        if (\strtolower($author) === \strtolower($pr['user']['login'])) {
+            $author = '@' . $pr['user']['login'];
+        }
+
+        $message = str_replace('@author', $author, $message ?? $pats[array_rand($pats)]);
+
+        $this->github->createComment($pr['number'], $message);
     }
 
     private function addCommentsToMergeCommit(array $pr, $sha)
@@ -374,6 +395,7 @@ COMMENT;
         $this->splitshGit->checkPrecondition();
 
         $this->style->text('Starting split operation please wait...');
+
         $progressBar = $this->style->createProgressBar();
         $progressBar->start(count($reposConfig['split']));
 
@@ -381,6 +403,8 @@ COMMENT;
             $progressBar->advance();
             $this->splitshGit->splitTo($pr['base']['ref'], $prefix, is_array($config) ? $config['url'] : $config);
         }
+
+        $this->style->text('');
     }
 
     private function removeSourceBranch(array $pr)

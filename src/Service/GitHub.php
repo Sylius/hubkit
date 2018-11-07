@@ -211,6 +211,13 @@ class GitHub
         return $pr;
     }
 
+    public function getUser(string $login): array
+    {
+        $api = $this->client->user();
+
+        return $api->show($login);
+    }
+
     public function getCommitStatuses(string $org, string $repo, string $hash): array
     {
         $pager = new ResultPager($this->client);

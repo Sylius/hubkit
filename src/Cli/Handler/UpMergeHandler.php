@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace HubKit\Cli\Handler;
 
+use HubKit\Config;
 use HubKit\Service\CliProcess;
 use HubKit\Service\Git;
 use HubKit\Service\GitHub;
+use HubKit\Service\SplitshGit;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Webmozart\Console\Api\Args\Args;
 
@@ -23,10 +25,18 @@ final class UpMergeHandler extends GitBaseHandler
 {
     private $process;
 
-    public function __construct(SymfonyStyle $style, Git $git, GitHub $github, CliProcess $process)
+    /** @var Config */
+    private $config;
+
+    /** @var SplitshGit */
+    private $splitshGit;
+
+    public function __construct(SymfonyStyle $style, Git $git, GitHub $github, CliProcess $process, Config $config, SplitshGit $splitshGit)
     {
         parent::__construct($style, $git, $github);
         $this->process = $process;
+        $this->config = $config;
+        $this->splitshGit = $splitshGit;
     }
 
     public function handle(Args $args)
@@ -71,6 +81,8 @@ final class UpMergeHandler extends GitBaseHandler
             $this->style->note(sprintf('Merged "%s" into "%s"', $branches[$i - 1], $branches[$i]));
 
             $changedBranches[] = $branches[$i];
+
+            $this->splitRepository($branches[$i]);
         }
 
         $this->git->checkout($branch);
@@ -97,6 +109,8 @@ final class UpMergeHandler extends GitBaseHandler
         $this->process->mustRun(['git', 'merge', '--no-ff', '--log', $branch]);
 
         $this->style->note(sprintf('Merged "%s" into "%s"', $branch, $nextVersion));
+
+        $this->splitRepository($nextVersion);
 
         $this->git->checkout($branch);
 
@@ -213,5 +227,33 @@ final class UpMergeHandler extends GitBaseHandler
 
             return 1;
         }
+    }
+
+    private function splitRepository(string $branch): void
+    {
+        $configName = ['repos', $this->github->getHostname(), $this->github->getOrganization().'/'.$this->github->getRepository()];
+        $reposConfig = $this->config->get($configName);
+
+        if (empty($reposConfig['split'])) {
+            return;
+        }
+
+        if (!$this->style->confirm('Split repository now?')) {
+            return;
+        }
+
+        $this->splitshGit->checkPrecondition();
+
+        $this->style->text('Starting split operation please wait...');
+
+        $progressBar = $this->style->createProgressBar();
+        $progressBar->start(count($reposConfig['split']));
+
+        foreach ($reposConfig['split'] as $prefix => $config) {
+            $progressBar->advance();
+            $this->splitshGit->splitTo($branch, $prefix, is_array($config) ? $config['url'] : $config);
+        }
+
+        $this->style->text('');
     }
 }

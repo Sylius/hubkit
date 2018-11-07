@@ -84,7 +84,7 @@ class ChangelogRenderer
         $title = mb_substr($title, 0, $pos).
             preg_replace(
                 '#([\w\d-_]+)#',
-                '[$1](https://'.$this->github->getHostname().'/$1)',
+                '[@$1](https://'.$this->github->getHostname().'/$1)',
                 mb_substr($title, $pos)
             )
         ;
@@ -93,7 +93,7 @@ class ChangelogRenderer
             $title = '[BC BREAK] '.$title;
         }
 
-        return sprintf('- %s [#%d](%s/issues/%2$d)', trim($title), $item['number'], $url)."\n";
+        return sprintf('- [#%d](%s/issues/%1$d) %s', $item['number'], $url, trim($title))."\n";
     }
 
     private function getItemsPerCategories(string $base, string $head): array
