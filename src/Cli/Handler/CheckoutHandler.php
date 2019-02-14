@@ -33,7 +33,14 @@ final class CheckoutHandler extends GitBaseHandler
     {
         $this->informationHeader();
 
-        $pullRequest = $this->github->getPullRequest($args->getArgument('number'));
+        $number = $args->getArgument('number');
+        if (null === $number) {
+            $this->style->error('You must specify the number of the pull-request for checkout.');
+
+            return;
+        }
+
+        $pullRequest = $this->github->getPullRequest($number);
 
         if ('open' !== $pullRequest['state']) {
             throw new \InvalidArgumentException('Cannot checkout closed/merged pull-request.');
