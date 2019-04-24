@@ -34,6 +34,12 @@ return [
     //
     'repos' => [
         'github.com' => [
+            'Sylius/SyliusMailerBundle' => [
+                'sync-tags' => true,
+                'split' => [
+                    'src/Component' => 'git@github.com:Sylius/Mailer.git',
+                ],
+            ],
             'Sylius/Sylius' => [
                 'sync-tags' => true,
                 'split' => [
@@ -48,7 +54,6 @@ return [
                     'src/Sylius/Bundle/GridBundle' => 'git@github.com:Sylius/SyliusGridBundle.git',
                     'src/Sylius/Bundle/InventoryBundle' => 'git@github.com:Sylius/SyliusInventoryBundle.git',
                     'src/Sylius/Bundle/LocaleBundle' => 'git@github.com:Sylius/SyliusLocaleBundle.git',
-                    'src/Sylius/Bundle/MailerBundle' => 'git@github.com:Sylius/SyliusMailerBundle.git',
                     'src/Sylius/Bundle/MoneyBundle' => 'git@github.com:Sylius/SyliusMoneyBundle.git',
                     'src/Sylius/Bundle/OrderBundle' => 'git@github.com:Sylius/SyliusOrderBundle.git',
                     'src/Sylius/Bundle/PaymentBundle' => 'git@github.com:Sylius/SyliusPaymentBundle.git',
@@ -72,7 +77,6 @@ return [
                     'src/Sylius/Component/Grid' => 'git@github.com:Sylius/Grid.git',
                     'src/Sylius/Component/Inventory' => 'git@github.com:Sylius/Inventory.git',
                     'src/Sylius/Component/Locale' => 'git@github.com:Sylius/Locale.git',
-                    'src/Sylius/Component/Mailer' => 'git@github.com:Sylius/Mailer.git',
                     'src/Sylius/Component/Order' => 'git@github.com:Sylius/Order.git',
                     'src/Sylius/Component/Payment' => 'git@github.com:Sylius/Payment.git',
                     'src/Sylius/Component/Product' => 'git@github.com:Sylius/Product.git',
