@@ -12,7 +12,13 @@ if [ ${branchName} == "master" ]; then
     echo ""
 fi
 
-composer.phar install -o --no-dev || (echo "Composer did not succeed." && exit 1)
+composer_executable=`which composer`
+if [ $? != 0 ]; then
+    echo "Composer is not installed globally falling back to local install"
+    composer.phar install -o --no-dev || (echo "Composer did not succeed." && exit 1)
+else
+    ${composer_executable} install -o --no-dev || (echo "Composer did not succeed." && exit 1)
+fi;
 
 if [ ! -f ./config.php ]; then
     echo -n "Copying config.php.dist to config.php"
