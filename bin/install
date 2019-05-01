@@ -15,9 +15,14 @@ fi
 composer_executable=`which composer`
 if [ $? != 0 ]; then
     echo "Composer is not installed globally falling back to local install"
-    composer.phar install -o --no-dev || (echo "Composer did not succeed." && exit 1)
+    composer.phar install -o --no-dev
 else
-    ${composer_executable} install -o --no-dev || (echo "Composer did not succeed." && exit 1)
+    ${composer_executable} install -o --no-dev
+fi;
+
+if [ $? != 0 ]; then
+    echo "Composer did not succeed."
+    exit 1
 fi;
 
 if [ ! -f ./config.php ]; then
