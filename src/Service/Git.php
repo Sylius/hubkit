@@ -55,8 +55,6 @@ class Git
     /**
      * Gets the diff status of the remote and local.
      *
-     * @param string $remoteName
-     * @param string $localBranch
      * @param string $remoteBranch
      *
      * @return string Returns the value of one of the following constants:
@@ -96,10 +94,7 @@ class Git
         $activeBranch = trim($this->process->mustRun('git rev-parse --abbrev-ref HEAD')->getOutput());
 
         if ('HEAD' === $activeBranch) {
-            throw new \RuntimeException(
-                'You are currently in a detached HEAD state, unable to get active branch-name.'.
-                'Please run `git checkout` first.'
-            );
+            throw new \RuntimeException('You are currently in a detached HEAD state, unable to get active branch-name.'.'Please run `git checkout` first.');
         }
 
         return $activeBranch;
@@ -162,9 +157,6 @@ class Git
      *
      * Or an empty array when there are no logs.
      *
-     * @param string $start
-     * @param string $end
-     *
      * @return array[]
      */
     public function getLogBetweenCommits(string $start, string $end): array
@@ -224,7 +216,7 @@ class Git
             )->getOutput()
         );
 
-        return in_array($branch, $branches, true);
+        return \in_array($branch, $branches, true);
     }
 
     public function branchExists(string $branch): bool
@@ -233,7 +225,7 @@ class Git
             $this->process->mustRun("git for-each-ref --format='%(refname:short)' refs/heads/")->getOutput()
         );
 
-        return in_array($branch, $branches, true);
+        return \in_array($branch, $branches, true);
     }
 
     public function deleteRemoteBranch(string $remote, string $ref)
@@ -279,12 +271,7 @@ class Git
         $ref = array_map(
             function ($ref) {
                 if (':' === $ref[0]) {
-                    throw new \RuntimeException(
-                        sprintf(
-                            'Push target "%s" does not include the local branch-name, please report this bug!',
-                            $ref
-                        )
-                    );
+                    throw new \RuntimeException(sprintf('Push target "%s" does not include the local branch-name, please report this bug!', $ref));
                 }
 
                 return $ref;
@@ -353,9 +340,6 @@ class Git
 
     /**
      * Checkout a remote branch or create it when it doesn't exit yet.
-     *
-     * @param string $remote
-     * @param string $branchName
      */
     public function checkoutRemoteBranch(string $remote, string $branchName)
     {
@@ -381,7 +365,7 @@ class Git
             $this->getGitConfig('remote.'.$remote.'.fetch', 'local', true)
         );
 
-        if (!in_array('+refs/notes/*:refs/notes/*', $fetches, true)) {
+        if (!\in_array('+refs/notes/*:refs/notes/*', $fetches, true)) {
             $this->style->note(
                 sprintf('Set fetching of notes for remote "%s".', $remote)
             );
@@ -403,16 +387,9 @@ class Git
 
             $this->pullRemote($remote, $localBranch);
         } elseif (self::STATUS_DIVERGED === $status) {
-            throw new \RuntimeException(
-                'Cannot safely perform the operation. '.
-                sprintf('Your local and remote version of branch "%s" have differed.', $localBranch).
-                ' Please resolve this problem manually.'
-            );
+            throw new \RuntimeException('Cannot safely perform the operation. '.sprintf('Your local and remote version of branch "%s" have differed.', $localBranch).' Please resolve this problem manually.');
         } elseif (!$allowPush && self::STATUS_NEED_PUSH === $status) {
-            throw new \RuntimeException(
-                sprintf('Branch "%s" contains commits not existing in the remote version.', $localBranch).
-                'Push is prohibited for this operation. Create a new branch and do a `git reset --hard`.'
-            );
+            throw new \RuntimeException(sprintf('Branch "%s" contains commits not existing in the remote version.', $localBranch).'Push is prohibited for this operation. Create a new branch and do a `git reset --hard`.');
         }
     }
 
@@ -432,13 +409,7 @@ class Git
     public function setGitConfig(string $config, $value, bool $overwrite = false, string $section = 'local')
     {
         if (!$overwrite && '' !== $this->getGitConfig($config, $section, $value)) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Unable to set git config "%s" at %s, because the value is already set.',
-                    $config,
-                    $section
-                )
-            );
+            throw new \RuntimeException(sprintf('Unable to set git config "%s" at %s, because the value is already set.', $config, $section));
         }
 
         $this->process->mustRun(
@@ -461,8 +432,6 @@ class Git
     }
 
     /**
-     * @param string $name
-     *
      * @return array [host, org, repo]
      */
     public function getRemoteInfo(string $name = 'upstream'): array
@@ -471,8 +440,6 @@ class Git
     }
 
     /**
-     * @param string $gitUri
-     *
      * @return array [host, org, repo]
      */
     public static function getGitUrlInfo(string $gitUri): array
@@ -497,7 +464,7 @@ class Git
         }
 
         if (isset($info['path'])) {
-            $dirs = array_slice(explode('/', $info['path']), -2, 2);
+            $dirs = \array_slice(explode('/', $info['path']), -2, 2);
 
             $info['org'] = $dirs[0];
             $info['repo'] = substr($dirs[1], -4, 4) === '.git' ? substr($dirs[1], 0, -4) : $dirs[1];

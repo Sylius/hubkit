@@ -131,9 +131,7 @@ class SplitshGit
         }
 
         if (!$this->git->isGitDir()) {
-            throw new \RuntimeException(
-                'Unable to perform split operation. Requires Git root directory of the repository.'
-            );
+            throw new \RuntimeException('Unable to perform split operation. Requires Git root directory of the repository.');
         }
     }
 }

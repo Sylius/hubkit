@@ -113,9 +113,7 @@ final class MergeHandler extends GitBaseHandler
         }
 
         if (null === $pr['mergeable']) {
-            throw new \InvalidArgumentException(
-                'Pull request is not processed yet. Please try again in a few seconds.'
-            );
+            throw new \InvalidArgumentException('Pull request is not processed yet. Please try again in a few seconds.');
         }
 
         if (true === $pr['mergeable']) {
@@ -156,7 +154,7 @@ final class MergeHandler extends GitBaseHandler
 
     private function determineReviewStatus(array $pr, StatusTable $table)
     {
-        if (!count($pr['labels'])) {
+        if (!\count($pr['labels'])) {
             return;
         }
 
@@ -302,7 +300,7 @@ final class MergeHandler extends GitBaseHandler
 
     private function patAuthor(array $pr, array $user, string $message = null)
     {
-        if (in_array($pr['user']['login'], [$this->github->getAuthUsername(), 'SyliusBot'], true)) {
+        if (\in_array($pr['user']['login'], [$this->github->getAuthUsername(), 'SyliusBot'], true)) {
             return;
         }
 
@@ -314,13 +312,13 @@ final class MergeHandler extends GitBaseHandler
         ];
 
         if (trim($user['name'] ?? '') !== '') {
-            $author = substr($user['name'], 0, strpos($user['name'], ' ') ?: strlen($user['name']));
+            $author = substr($user['name'], 0, strpos($user['name'], ' ') ?: \strlen($user['name']));
         } else {
             $author = $pr['user']['login'];
         }
 
-        if (\strtolower($author) === \strtolower($pr['user']['login'])) {
-            $author = '@' . $pr['user']['login'];
+        if (strtolower($author) === strtolower($pr['user']['login'])) {
+            $author = '@'.$pr['user']['login'];
         }
 
         $message = str_replace('@author', $author, $message ?? $pats[array_rand($pats)]);
@@ -397,11 +395,11 @@ COMMENT;
         $this->style->text('Starting split operation please wait...');
 
         $progressBar = $this->style->createProgressBar();
-        $progressBar->start(count($reposConfig['split']));
+        $progressBar->start(\count($reposConfig['split']));
 
         foreach ($reposConfig['split'] as $prefix => $config) {
             $progressBar->advance();
-            $this->splitshGit->splitTo($pr['base']['ref'], $prefix, is_array($config) ? $config['url'] : $config);
+            $this->splitshGit->splitTo($pr['base']['ref'], $prefix, \is_array($config) ? $config['url'] : $config);
         }
 
         $this->style->text('');
@@ -441,7 +439,7 @@ COMMENT;
         $violations = MessageValidator::validateCommitsMessages($commits);
         $severity = MessageValidator::SEVERITY_LOW;
 
-        if (count($violations) === 0) {
+        if (\count($violations) === 0) {
             return;
         }
 

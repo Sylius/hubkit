@@ -33,9 +33,7 @@ final class BranchAliasHandler implements RequiresGitRepository
 
         if (null !== $newAlias = $args->getArgument('alias')) {
             if (!preg_match('/^\d+\.\d+$/', $newAlias)) {
-                throw new \InvalidArgumentException(
-                    'A branch alias consists of major and minor version without any prefix or suffix. like: 1.2'
-                );
+                throw new \InvalidArgumentException('A branch alias consists of major and minor version without any prefix or suffix. like: 1.2');
             }
 
             $alias = $newAlias.'-dev';
