@@ -41,8 +41,6 @@ class Downloader
      * Download a file from the URL to the destination.
      *
      * @param string $url Fully qualified URL to the file
-     *
-     * @return string
      */
     public function downloadFile(string $url): string
     {

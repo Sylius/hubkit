@@ -98,9 +98,7 @@ final class SwitchBaseHandler extends GitBaseHandler
             }
 
             if (!$this->style->confirm('Do you want to continue the previous operation?')) {
-                throw new \RuntimeException(
-                    'Failed! Cannot perform switch while another operation is still pending. Please abort previous operation first.'
-                );
+                throw new \RuntimeException('Failed! Cannot perform switch while another operation is still pending. Please abort previous operation first.');
             }
 
             $this->git->checkout($tmpWorkingBranch);
@@ -132,8 +130,7 @@ final class SwitchBaseHandler extends GitBaseHandler
             $this->process->mustRun(['git', 'rebase', '--onto', 'upstream/'.$newBase, $currentBase, $tmpBranch]);
             $this->git->checkout($activeBranch);
         } catch (ProcessFailedException $e) {
-            throw new \RuntimeException(
-                <<<MESSAGE
+            throw new \RuntimeException(<<<MESSAGE
 Git rebase operation failed: {$e->getMessage()}
 
 -------------------------------------------------------------
@@ -143,20 +140,14 @@ files AND execute `git rebase --continue` afterwards.
 Then run the operation again.
 
 DO NOT PUSH THE CHANGES MANUALLY!
-MESSAGE
-                , 0, $e
-            );
+MESSAGE, 0, $e);
         }
     }
 
     private function guardWorkingTreeIsReady(): void
     {
         if (!$this->git->isWorkingTreeReady()) {
-            throw new \RuntimeException(
-                'The Git working tree is not ready. There are uncommitted changes or a rebase is in progress.'.
-                "\n".
-                'If there were conflicts during the switch run `git rebase --continue` and run the `switch-base` command again.'
-            );
+            throw new \RuntimeException('The Git working tree is not ready. There are uncommitted changes or a rebase is in progress.'."\n".'If there were conflicts during the switch run `git rebase --continue` and run the `switch-base` command again.');
         }
     }
 

@@ -26,8 +26,6 @@ trait SymfonyStyleTrait
     protected $output;
 
     /**
-     * @param array $input
-     *
      * @return SymfonyStyle
      */
     protected function createStyle(array $input = [])
@@ -39,7 +37,7 @@ trait SymfonyStyleTrait
             $this->input->setStream($this->getInputStream($input));
         }
 
-        $this->output = new StreamOutput(fopen('php://memory', 'wb', false));
+        $this->output = new StreamOutput(fopen('php://memory', 'w', false));
         $this->output->setDecorated(false);
 
         return new SymfonyStyle($this->input, $this->output);
@@ -79,7 +77,7 @@ trait SymfonyStyleTrait
         $expectedLines = (array) $expectedLines;
 
         foreach ($expectedLines as $matchLine) {
-            if (is_array($matchLine)) {
+            if (\is_array($matchLine)) {
                 $line = $matchLine[0];
                 $lineRegex = $matchLine[1];
             } else {
@@ -105,7 +103,7 @@ trait SymfonyStyleTrait
         $lines = (array) $lines;
 
         foreach ($lines as $matchLine) {
-            if (is_array($matchLine)) {
+            if (\is_array($matchLine)) {
                 $line = $matchLine[0];
                 $lineRegex = $matchLine[1];
             } else {

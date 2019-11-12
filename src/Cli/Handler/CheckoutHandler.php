@@ -78,9 +78,7 @@ final class CheckoutHandler extends GitBaseHandler
 
             $this->git->pullRemote($remote);
         } elseif ($this->git::STATUS_DIVERGED === $status) {
-            throw new \RuntimeException(
-                'Your local branch and the remote version have differed. Please resolve this problem manually.'
-            );
+            throw new \RuntimeException('Your local branch and the remote version have differed. Please resolve this problem manually.');
         }
     }
 }

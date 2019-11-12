@@ -85,9 +85,7 @@ class BranchAliasResolver
             null,
             function ($value) {
                 if (!preg_match('/^\d+\.\d+$/', $value)) {
-                    throw new \InvalidArgumentException(
-                        'A branch alias consists of major and minor version without any prefix or suffix. like: 1.2'
-                    );
+                    throw new \InvalidArgumentException('A branch alias consists of major and minor version without any prefix or suffix. like: 1.2');
                 }
 
                 return $value.'-dev';

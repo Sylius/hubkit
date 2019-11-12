@@ -73,7 +73,7 @@ final class UpMergeHandler extends GitBaseHandler
         $branches[] = 'master';
         $changedBranches = [];
 
-        for ($i = $idx + 1, $c = count($branches); $i < $c; ++$i) {
+        for ($i = $idx + 1, $c = \count($branches); $i < $c; ++$i) {
             $this->git->checkoutRemoteBranch('upstream', $branches[$i]);
             $this->git->ensureBranchInSync('upstream', $branches[$i]);
             $this->process->mustRun(['git', 'merge', '--no-ff', '--log', $branches[$i - 1]]);
@@ -133,7 +133,7 @@ final class UpMergeHandler extends GitBaseHandler
         $branches[] = 'master';
         $changedBranches = [];
 
-        for ($i = $idx + 1, $c = count($branches); $i < $c; ++$i) {
+        for ($i = $idx + 1, $c = \count($branches); $i < $c; ++$i) {
             $this->git->ensureBranchInSync('upstream', $branches[$i]);
             $this->style->note(sprintf('[DRY-RUN] Merged "%s" into "%s"', $branches[$i - 1], $branches[$i]));
 
@@ -247,11 +247,11 @@ final class UpMergeHandler extends GitBaseHandler
         $this->style->text('Starting split operation please wait...');
 
         $progressBar = $this->style->createProgressBar();
-        $progressBar->start(count($reposConfig['split']));
+        $progressBar->start(\count($reposConfig['split']));
 
         foreach ($reposConfig['split'] as $prefix => $config) {
             $progressBar->advance();
-            $this->splitshGit->splitTo($branch, $prefix, is_array($config) ? $config['url'] : $config);
+            $this->splitshGit->splitTo($branch, $prefix, \is_array($config) ? $config['url'] : $config);
         }
 
         $this->style->text('');

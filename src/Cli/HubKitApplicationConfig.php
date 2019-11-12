@@ -47,9 +47,7 @@ final class HubKitApplicationConfig extends DefaultApplicationConfig
     {
         if (null === $container) {
             if (!file_exists(__DIR__.'/../../config.php') && file_exists(__DIR__.'/../../config.php.dist')) {
-                throw new \InvalidArgumentException(
-                    sprintf('Please copy "%s.dist" to "%$1s" and change the API token.', __DIR__.'/../../config.php')
-                );
+                throw new \InvalidArgumentException(sprintf('Please copy "%s.dist" to "%$1s" and change the API token.', __DIR__.'/../../config.php'));
             }
 
             $parameters = [];
@@ -110,9 +108,7 @@ final class HubKitApplicationConfig extends DefaultApplicationConfig
                 $isGit = $this->container['git']->isGitDir();
 
                 if ($handler instanceof RequiresGitRepository && !$isGit) {
-                    throw new \RuntimeException(
-                        'This Command can only be executed from the root of a Git repository.'
-                    );
+                    throw new \RuntimeException('This Command can only be executed from the root of a Git repository.');
                 }
 
                 if ($handler instanceof RequiresGitRepository && $isGit) {

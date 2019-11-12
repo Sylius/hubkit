@@ -42,13 +42,7 @@ final class ConfigFactory
         }
 
         if ($config['schema_version'] !== self::SCHEMA_VERSION) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Config schema-version mismatch, expected %s got "%s". ',
-                    self::SCHEMA_VERSION,
-                    $config['schema_version']
-                )."\n".'If expected number is lower update HubKit else update the configuration.'
-            );
+            throw new \RuntimeException(sprintf('Config schema-version mismatch, expected %s got "%s". ', self::SCHEMA_VERSION, $config['schema_version'])."\n".'If expected number is lower update HubKit else update the configuration.');
         }
 
         return new Config($config);
@@ -61,9 +55,7 @@ final class ConfigFactory
         }
 
         if (false === $realPath = realpath($path)) {
-            throw new \InvalidArgumentException(
-                sprintf('Unable to normalize path "%s", no such file or directory.', $path)
-            );
+            throw new \InvalidArgumentException(sprintf('Unable to normalize path "%s", no such file or directory.', $path));
         }
 
         return str_replace('\\', '//', $realPath);
