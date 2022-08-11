@@ -66,7 +66,7 @@ class GitHub
             $this->clientBuilder = new Builder($this->httpClient);
 
             $this->client = new GitHubClient($this->clientBuilder, null, $apiUrl);
-            $this->client->authenticate($apiToken, null, GitHubClient::AUTH_HTTP_TOKEN);
+            $this->client->authenticate($apiToken, null, GitHubClient::AUTH_ACCESS_TOKEN);
             $this->hostname = $hostname;
         }
     }
